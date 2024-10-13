@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class=" container p-5 mt-5 text-dark-emphasis">
+        <table class="table table-info table-striped" id="data">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>Salary</th>
+                    <th>Age</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <form class="mt-5">
+            <div class="mb-3">
+                <label class="form-label">ID</label>
+                <input type="text" class="form-control" id="txtid" placeholder="ID">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" id="txtname" placeholder="Name">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Designation</label>
+                <input type="number" maxlength="12" class="form-control" id="txtdesignation"
+                    placeholder="Enter Designation">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Salary</label>
+                <input type="number" class="form-control" id="txtsalary"
+                    placeholder="Enter Salary">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Age</label>
+                <input type="text" readonly class="form-control" id="txtage"
+                    placeholder="Enter age">
+            </div>
+            <div class="btn btn-info" id="btnAdd">Add Data</div>
+        </form>
+    </div>
+    <script src="jquery.js" defer></script>
+    <script src="js/bootstrap.min.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchData);
+        document.querySelector('#btnAdd').addEventListener('click', adddata);
+        document.querySelector('#txtage').addEventListener("input", function(event) {
+        if (document.querySelector('#txtage').value > 50000) {
+                    document.querySelector('#txtage').value = "Yes";
+                }
+                else {
+                    document.querySelector('#txtage').value = "No";
+                }  
+        });
+        function fetchData() {
+            $.ajax({
+                url: 'http://localhost:50473/api/emp',
+                type: 'GET',
+                success: function (response) {
+                    console.log(response);
+                    const tbody = document.querySelector('#data').children[1];
+                    tbody.innerHTML = '';
+                    for (var i = 0; i < response.length; i++) {
+                        var tr = document.createElement('tr');
+                        tr.innerHTML =
+                            `<td>${response[i]['Id']}</td>
+                        <td>${response[i]['Name']}</td>
+                        <td>${response[i]['Designation']}</td>
+                        <td>${response[i]['Salary']}</td>    
+                        <td>${response[i]['Age']}</td>
+                        `
+                        tbody.appendChild(tr);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', status, error);
+                }
+            });
+        }
+
+        function addDonor() {
+             if (document.querySelector('#txtname').value.trim() === '') {
+
+            alert("Please enter  name");
+
+             }
+
+             else if (document.querySelector('#txtdesignation').value.trim() === '') {
+
+             alert("Please enter  designation");
+
+         }
+
+         else if (document.querySelector('#txtname').value.trim() === '') {
+
+             alert("Please enter  Name");
+             }
+             else if (document.querySelector('#txtage').value.trim() === '') {
+
+             alert("Please enter  age");
+
+         }
+
+ else {
+
+ const Donor = {
+
+ 'Id': document.querySelector('#txtid').value,
+
+'Name': document.querySelector('#txtname').value,
+
+ 'Designation': document.querySelector('#txtdesignation').value,
+
+'Salary': document.querySelector('#txtsalary').value,
+
+ 'Age': document.querySelector('#txtage').value
+
+ }
+
+const stringifiedData = JSON.stringify(data);
+
+ console.log(data);
+
+ $.ajax({
+
+ url: 'http://localhost:50473/api/emp' + document.getElementById("txtname").value,
+
+type: 'POST',
+
+data: stringifiedData,
+contentType: 'application/json',
+
+ success: function (response) {
+
+console.log(response);
+
+ if (response['output']) {
+
+ console.log(data);
+
+fetchData();}
+
+ else {
+
+ alert(response["message"]);}},
+
+ error: function (xhr, status, error) {
+ console.error('Error:', status, error);
+
+ }
+});
+
+  
+ }
+}
+
+
+    </script>
+</body>
+
+</html>
